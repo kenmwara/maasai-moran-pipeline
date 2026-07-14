@@ -1,75 +1,78 @@
-# Maasai Moran — automated YouTube content pipeline
+# Maasai Moran — an autonomous AI filmmaking studio
 
-> End-to-end automation for a long-form storytelling channel: generation, posting, and analytics. Python + PM2 + custom dashboard.
+> A system that **researches what goes viral, writes original films, shoots them with AI cameras that cannot exist, narrates them with one voice, scores their tension, posts them on schedule, and learns from every view** — with zero human touch per video.
 
-🌐 **Channel:** [youtube.com/@maasaimoran](https://youtube.com/@maasaimoran) *(or similar)*
-🏗️ **Stack:** Python, PM2, YouTube Data API, custom analytics dashboard (HTML/JS)
-🔒 **Source:** private
+🌐 **Channel:** [youtube.com/@MaasaiMoran-KK](https://www.youtube.com/@MaasaiMoran-KK) · 🏗️ **Stack:** Node.js, PM2, Veo 3 (Kie), Claude, ElevenLabs, gpt-image-1, ffmpeg, YouTube Data API v3 · 🔒 **Source:** private — this is the public write-up
 
 ---
 
-## What this is
+## 🧠 The YouTube Brain
 
-A content pipeline that takes a brief through generation → editing → posting → analytics for a YouTube storytelling channel. Built to reduce the per-video operator time from hours to minutes, with full analytics visibility on every upload.
+<p align="center">
+  <img src="assets/youtube-brain.png" alt="The YouTube Brain — a glowing neural map of viral research flowing into video creation" width="820">
+</p>
 
-## Pipeline
+Before a single frame renders, **The Brain** decides what deserves to exist. It is a standalone research engine that:
+
+- **Harvests viral outliers** across the niche (keyless — search, velocity, transcripts of the hooks that worked)
+- **Extracts patterns with evidence** — every pattern cites the videos that prove it; no vibes-based strategy
+- **Generates channel identities in three bands** (close to the niche / adjacent / same frameworks, different world), scores them on viral ceiling × fit × speed-to-monetize, and locks the winner as a **fingerprint**
+- **Mints video ideas** from the active fingerprint — each with a distinct narrative device, emotional core, and a wow-test ("would a jaded editor screenshot this title?")
+- **Gates every generation**: before any Short or film is written, the full posted history (title, device, theme, format) is loaded and the new concept is *verified different* — a device-clash triggers regeneration. Diversity drives virality, structurally.
+- **Learns from reality**: an analytics loop matches published videos back to the patterns that spawned them — winners strengthen their patterns, flops decay them, and the next research cycle thinks with the new weights.
+
+The Brain's provenance graph (viral sources → patterns → identities → fingerprint → ideas → published videos) renders as a live force-directed **Brain Map** — glowing, type-colored, with flow particles feeding the video-creation hub. The image above is its likeness.
+
+## 🎬 The production engine (v2)
+
+Every video is manufactured, not generated:
 
 ```
-Brief (markdown)
-       │
-       ▼
-generate_and_post.py  ─→  text generation → voice → b-roll → final cut
-       │
-       ▼
-YouTube upload via Data API (scheduled or immediate)
-       │
-       ▼
-Analytics fetcher (every hour)
-       │
-       ▼
-maasai_youtube_analytics_dashboard.html
-   (per-video views, retention, CTR, subscribers gained)
-       │
-       ▼
-Events to ops.tbot.trade  (uploads, views, milestones)
+The Brain (gate: device/theme vs full posted history)
+        │
+        ▼
+Claude screenwriter ── theme · stakes · education · nested-loop retention grammar
+        │               first-1.5s hook · tension moves (build/hold/release) per scene
+        ▼
+Frame-chained Veo 3 scenes ── each scene renders FROM the previous scene's final
+        │                     frame (image-to-video): character, wardrobe and light
+        │                     are physically continuous, not prompt-hopefully
+        ▼
+One narrator, post-produced ── every clip is speech-free; a single fixed TTS voice
+        │                      is mixed over tension-scored ambience per scene
+        ▼
+Crossfaded assembly ── 0.35s video+audio dissolves at every join; seamless loop
+        │              anchor for Shorts (last frame = first frame)
+        ▼
+YouTube Data API v3 ── direct resumable upload · AI-content disclosure · custom
+        │              gpt-image-1 thumbnail · tags · auto-posted engagement comment
+        ▼
+Telegram ops ping ─── then a detached analytics chain (2h/24h/72h) feeds the
+                      performance model without ever blocking the next slot
 ```
 
-## Architecture
+**Formats:** ~64-second Shorts (8 chained acts, three-act structure with room to land) twice daily, and ~3-minute original 16:9 films twice weekly — every film a **new narrative device the channel has never used** (the Brain's history feedback makes formats structurally unrepeatable).
 
-- **Orchestration:** `generate_and_post.py` — main Python pipeline, modular per stage so steps can be re-run individually
-- **Process supervision:** PM2 (`ecosystem.config.js`) — keeps the analytics fetcher alive, schedules generation runs, restarts on failure
-- **Analytics:** custom HTML/JS dashboard backed by JSON files written by the analytics fetcher — no DB needed at current scale
-- **Storage:** local filesystem for raw assets; published videos live on YouTube
-- **Reporting:** every upload + milestone POSTs to `events.tbot.trade/ingest` for cross-portfolio visibility
+## 🛡️ Built to run unattended
 
-## Key decisions
+- **Slot scheduler** on absolute wall-clock (Shorts 16:00 & 23:00 UTC, films Wed + Sat 15:00 UTC) — restarts re-sleep to the same slot, no drift, no double-posts
+- **Credit preflight** before every film — a run that can't finish never starts
+- **Per-scene resilience** — safety-filter false positives get a sanitized rewrite, then a skip; a 23-scene film beats an aborted one
+- **Screenplay persistence + resume** — an interrupted film re-renders only its missing scenes
+- **Character persistence rules** — no cast member may vanish, morph, or be replaced by fire (learned the hard way)
+- **Fail-soft everything** — a dead Telegram moment, a flaky image host, or a blocked scene never kills a cycle; failures ping the operator and the next slot proceeds
+- Runs on a shared trading droplet under PM2 at `nice -15`/idle-IO with a hard memory cap — the studio can never starve the systems that pay for it
 
-### 1. Generation as a script, not a SaaS
+## 💸 Unit economics
 
-Comparable SaaS tools cost $50-300/mo and box you into their template library. A Python script + the right APIs is a one-time build that scales with usage rather than subscription tier.
+| Asset | Cost | Cadence |
+|---|---|---|
+| 64s Short (8 × Veo 3 Fast clips + TTS + thumbnail) | ~$3.20 | 2× daily |
+| ~3-min film (24 chained scenes + narration + thumbnail) | ~$9.60 | 2× weekly |
+| **Studio total** | **~$65/week** | ~18 originals/week |
 
-### 2. PM2 for process supervision, not systemd or Docker
-
-PM2 was already running for the trading bot loops; reusing it for the content pipeline meant zero new ops surface. Single `pm2 status` shows the whole portfolio's runtime state.
-
-### 3. Custom analytics dashboard instead of YouTube Studio
-
-YouTube Studio is great for one channel; it's terrible for cross-channel rollups or for piping data into the unified ops dashboard. A 200-line HTML/JS dashboard reading from JSON files gives me exactly the views I want and writes events into the broader portfolio analytics.
-
-### 4. Modular pipeline stages
-
-`generate_and_post.py` is structured so each stage (text → voice → b-roll → cut → upload) can be invoked individually. Re-running just one stage (e.g. swap voice models for an existing script) doesn't require regenerating everything upstream.
-
-## What I'd build next
-
-1. **A/B title testing** — generate 3 candidate titles per video, pick the best after the first 1000 views, update via YouTube API
-2. **Cross-post automation** — short-form cuts to TikTok / Reels from the same source assets
-3. **Sponsor-slot detection** — scan analytics to identify which videos earn best-retention sponsor breaks for upsell to brand deals
-
-## Why this is interesting
-
-It's a complete content business running as a Python script under PM2 alongside a trading bot. **One operator. Two unrelated revenue streams. Same supervision substrate.** The discipline transfers — what you learn building algorithmic trading systems (idempotent retries, structured logging, clean state machines) makes content pipelines vastly more reliable than the "no-code automation" alternatives.
+A one-person film studio's monthly output for the price of a dinner.
 
 ---
 
-*Source code is private. Architecture and decisions above are the showcase. To discuss, [reach out](https://linkedin.com/in/kenmwara).*
+*Everything above runs autonomously today. The operator's job is taste: watch, judge, and tune the mandates — the machine does the rest.*
