@@ -56,7 +56,7 @@ Operator review ── the machine manufactures; a human green-lights every rele
                    (AI-content disclosure on, always)
 ```
 
-**Formats:** ~12-minute 16:9 documentary explainers (40+ units, stills + motion interleaved by a pacing plan) and ~3-minute paper-craft collapse files (24 chained scenes) — every film a **new narrative device the channel has never used**.
+**Formats:** 8-to-12-minute 16:9 documentary films on BOTH channels (40+ units, stills + motion interleaved by a pacing plan; every film clears the 8:00 mid-roll threshold by law — short-form exists only as trailers) — every film a **new narrative device the channel has never used**.
 
 ## 🔬 Model choices are measured, not vibes
 
@@ -84,7 +84,7 @@ The studio A/B-tests its own supply chain with the same discipline as a trading 
 | Proofread keyframe | ~$0.04 | nano-banana-2, vision-QA'd, re-rolls included in the ~10% overhead |
 | 8s motion clip | ~$0.53–0.81 | Omni Flash (aggregator vs direct), text-checked twice |
 | ~12-min documentary (44 units) | **~$15–25 all-in** | screenplay, voice, frames, motion, QA, thumbnail |
-| ~3-min collapse file (24 scenes) | ~$12–20 | all-motion paper-craft |
+| 8:00+ collapse file (46 units, ~40% motion) | ~$28–30 | paper-craft, QA-gated (re-rolls ≈2× naive clip count) |
 
 A one-person film studio's output for the price of a dinner — with a QA department made of code.
 
