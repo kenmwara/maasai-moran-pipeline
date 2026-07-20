@@ -2,7 +2,7 @@
 
 > A system that **researches what goes viral, writes original films, shoots them with AI cameras that cannot exist, narrates them with one voice, proofreads its own frames, scores their tension, and learns from every view.** It began as one channel's pipeline. It is now a multi-channel studio — and the operator's job is taste.
 
-🌐 **Channels:** [Maasai Explained](https://www.youtube.com/@MaasaiExplained) (searchable East-Africa docu-explainers) · **The Collapse Files** (paper-craft corporate-collapse documentaries) · 🏗️ **Stack:** Node.js, PM2, Gemini Omni Flash, Veo 3, nano-banana-2, Claude, ElevenLabs, gpt-image-1, ffmpeg, YouTube Data API v3 · 🔒 **Source:** private — this is the public write-up
+🌐 **Channels:** [Maasai Explained](https://www.youtube.com/@MaasaiExplained) (searchable East-Africa docu-explainers) · [The Collapse Files](https://www.youtube.com/@thecollapsefiles_HQ) (paper-craft corporate-collapse documentaries) · 🏗️ **Stack:** Node.js, PM2, Gemini Omni Flash, Veo 3, nano-banana-2, Claude, ElevenLabs, gpt-image-1, ffmpeg, YouTube Data API v3 · 🔒 **Source:** private — this is the public write-up
 
 ---
 
